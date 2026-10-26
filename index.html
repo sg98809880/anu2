@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anu's Bakehouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: mobile-first. Pink hero with tilted photo tiles, sticky yellow category bar that follows your scroll, 2-column menu cards (3-4 on wide screens), price pill pinned to the bottom of every card, floating WhatsApp button. Single bright theme by design. */
+:root{
+  color-scheme:light;
+  --ink:#2B1646; --muted:#5B4678; --pink:#FF3D8B; --yellow:#FFD23F; --teal:#14C8AE; --page:#F4EDFF; --white:#FFFFFF;
+  --t-bread:#FFD84D; --t-cookie:#FF9EBB; --t-cake:#C9B3FF; --t-tira:#8FE3CF; --t-savoury:#FFB26B; --t-cheese:#9AD7FF; --t-granola:#C7F26B;
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --gx-l:max(16px,env(safe-area-inset-left,0px));
+  --gx-r:max(16px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font:600 16px/1.5 var(--body);padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--pink);z-index:30}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:10px}
+.in{max-width:1100px;margin:0 auto;padding-left:var(--gx-l);padding-right:var(--gx-r)}
+
+/* hero */
+.hero{background:var(--pink);color:#fff;border-bottom:3px solid var(--ink);border-radius:0 0 30px 30px}
+.hero .in{display:grid;grid-template-columns:1fr;gap:26px;padding-block:30px 40px}
+.eyebrow{display:inline-block;margin:0 0 12px;padding:4px 12px;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);border-radius:999px;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-2deg)}
+h1{margin:0 0 10px;font:800 clamp(2.8rem,13vw,5.2rem)/.95 var(--display);text-shadow:3px 3px 0 var(--ink);text-wrap:balance}
+.lead{margin:0 0 6px;font:700 1.25rem/1.3 var(--display)}
+.sub{margin:0 0 22px;max-width:40ch;font-weight:700;opacity:.95}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 22px;border-radius:999px;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font:800 1rem var(--body);text-decoration:none;color:var(--ink);background:var(--yellow);transition:transform .12s ease,box-shadow .12s ease}
+.btn.white{background:#fff}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:520px}
+.tile{aspect-ratio:1/1;border:2px solid var(--ink);border-radius:18px;box-shadow:3px 3px 0 var(--ink);overflow:hidden;min-width:0}
+.tile:nth-child(1){transform:rotate(-4deg)}
+.tile:nth-child(2){transform:translateY(8px) rotate(3deg)}
+.tile:nth-child(3){transform:rotate(-2deg)}
+.tile svg{display:block;width:100%;height:100%}
+
+/* sticky category bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--yellow);border-block:3px solid var(--ink);margin-top:18px}
+.bar::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:18px;background:var(--page)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-block:10px;scroll-snap-type:x proximity}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;scroll-snap-align:center;min-height:44px;display:inline-flex;align-items:center;padding:6px 16px;border-radius:999px;border:2px solid var(--ink);background:#fff;font:800 .95rem var(--body);text-decoration:none;white-space:nowrap}
+.chip.on{background:var(--pink);color:#fff;box-shadow:2px 2px 0 var(--ink)}
+
+/* menu */
+section{padding-top:30px;scroll-margin-top:84px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+h2{margin:0;display:inline-block;padding:2px 16px 4px;border:2px solid var(--ink);border-radius:16px;background:var(--tint);box-shadow:3px 3px 0 var(--ink);font:800 clamp(1.5rem,6vw,2.1rem)/1.15 var(--display);transform:rotate(-1.5deg)}
+.count{font-weight:800;font-size:.85rem;color:var(--muted);white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{display:flex;flex-direction:column;min-width:0;background:#fff;border:2px solid var(--ink);border-radius:18px;box-shadow:3px 3px 0 var(--ink);overflow:hidden;transition:transform .12s ease,box-shadow .12s ease}
+.card:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.pic{aspect-ratio:4/3;background:var(--tint);border-bottom:2px solid var(--ink);max-width:100%}
+.pic svg,.pic img{display:block;width:100%;height:100%;object-fit:cover}
+.body{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;padding:10px 12px 12px}
+h3{margin:0;font:800 1rem/1.2 var(--body);text-wrap:balance}
+.desc{margin:0;font-size:.8rem;line-height:1.35;color:var(--muted);font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:.68rem;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--page);border:1.5px solid var(--ink)}
+.price{margin-top:auto;padding-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.p{display:flex;flex-direction:column;padding:4px 11px 5px;border-radius:12px;background:var(--yellow);border:2px solid var(--ink);line-height:1.05;font-variant-numeric:tabular-nums}
+.amt{font:800 1.3rem/1.05 var(--display)}
+.unit{font-size:.7rem;font-weight:800}
+
+/* order band */
+.order{margin-top:44px;background:var(--teal);border:3px solid var(--ink);border-radius:26px;box-shadow:4px 4px 0 var(--ink);padding:24px 20px;display:grid;gap:14px}
+.order h2{background:#fff;justify-self:start}
+.order p{margin:0;font-weight:700}
+.phone{font:800 clamp(2rem,9vw,2.8rem)/1 var(--display);user-select:all;word-break:break-all}
+.small{margin:26px 0 0;text-align:center;font-size:.85rem;color:var(--muted);font-weight:700}
+
+/* floating order button */
+.fab{position:fixed;z-index:25;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));min-height:52px;padding:10px 20px;border-radius:999px;background:var(--teal);color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font:800 1rem var(--body);text-decoration:none;display:inline-flex;align-items:center}
+.fab:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+@media (min-width:640px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .h3,h3{font-size:1.05rem}
+  .desc{font-size:.86rem}
+  .body{padding:12px 14px 14px}
+  section{padding-top:44px}
+}
+@media (min-width:900px){
+  .hero .in{grid-template-columns:1.1fr .9fr;align-items:center;padding-block:48px 56px}
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .order{grid-template-columns:1.2fr 1fr;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .card,.btn,.fab{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="in">
+    <div>
+      <p class="eyebrow">Home-baked</p>
+      <h1>Anu's Bakehouse</h1>
+      <p class="lead">Home-baked, made fresh to order.</p>
+      <p class="sub">Breads, cookies, cakes, tiramisu, savoury bakes, cheesecakes and granola. Please allow advance notice.</p>
+      <div class="cta">
+        <a class="btn" href="#breads">See the menu</a>
+        <a class="btn white" id="wa-hero" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+      </div>
+    </div>
+    <div class="tiles" id="tiles" aria-hidden="true"></div>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Menu categories"><div class="in"><div class="chips" id="chips"></div></div></nav>
+
+<main class="in" id="menu"></main>
+
+<div class="in">
+  <aside class="order" id="order">
+    <div>
+      <h2 style="--tint:#fff">Place an order</h2>
+      <p style="margin-top:12px">Every bake is made fresh to order, so please allow advance notice.</p>
+    </div>
+    <div style="display:grid;gap:10px;justify-items:start">
+      <p>Call or message</p>
+      <div class="phone">9902276504</div>
+      <a class="btn" id="wa-foot" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+    </div>
+  </aside>
+  <p class="small">Anu's Bakehouse &middot; Home-baked, made fresh to order</p>
+</div>
+
+<a class="fab" id="wa-fab" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+
+<script>
+/* ---------- illustration helpers ---------- */
+let U=0;
+const rnd=s=>{const x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x)};
+const f1=n=>Math.round(n*10)/10;
+const mk=fn=>{
+  let defs='';
+  const g=(a,b,h)=>{const id='g'+(++U);defs+=`<linearGradient id="${id}" x1="0" y1="0" x2="${h?1:0}" y2="${h?0:1}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;return `url(#${id})`};
+  const r=(a,b)=>{const id='g'+(++U);defs+=`<radialGradient id="${id}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></radialGradient>`;return `url(#${id})`};
+  const c=d=>{const id='c'+(++U);defs+=`<clipPath id="${id}"><path d="${d}"/></clipPath>`;return id};
+  const body=fn(g,r,c);
+  return `<svg viewBox="0 0 200 150" aria-hidden="true" focusable="false"><defs>${defs}</defs>${body}</svg>`;
+};
+const sh=(cx=100,cy=131,rx=72)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="8" fill="#2a1a10" opacity=".16"/>`;
+const sc=(n,cx,cy,rx,ry,seed,fn)=>{let o='';for(let i=0;i<n;i++){const a=rnd(seed+i*1.37)*6.2832,d=Math.sqrt(rnd(seed+i*2.71+9));o+=fn(f1(cx+Math.cos(a)*d*rx),f1(cy+Math.sin(a)*d*ry),Math.round(rnd(seed+i*5.13)*180),i)}return o};
+const chip=(col,w=6,h=4.4)=>(x,y,a)=>`<rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" rx="1.3" fill="${col}" transform="translate(${x} ${y}) rotate(${a})"/>`;
+const dot=(col,rr=1.6)=>(x,y)=>`<circle cx="${x}" cy="${y}" r="${rr}" fill="${col}"/>`;
+const ell=(col,rx,ry)=>(x,y,a)=>`<ellipse rx="${rx}" ry="${ry}" fill="${col}" transform="translate(${x} ${y}) rotate(${a})"/>`;
+
+/* ---------- cookies ---------- */
+const cookie=(r_,cx,cy,R,base,rim,seed,decor)=>{
+  let bumps='';
+  for(let i=0;i<12;i++){const a=i/12*6.2832+rnd(seed+i)*.4;bumps+=`<circle cx="${f1(cx+Math.cos(a)*R*.95)}" cy="${f1(cy+3+Math.sin(a)*R*.86)}" r="${f1(R*.14)}" fill="${rim}"/>`}
+  return `<ellipse cx="${cx}" cy="${cy+3}" rx="${R}" ry="${f1(R*.88)}" fill="${rim}"/>${bumps}`+
+    `<ellipse cx="${cx}" cy="${cy}" rx="${f1(R*.97)}" ry="${f1(R*.87)}" fill="${r_(base[0],base[1])}"/>`+decor(cx,cy,R,seed);
+};
+const D={
+  choc:(cx,cy,R,s)=>sc(Math.round(R/4),cx,cy,R*.72,R*.62,s*7,chip('#3A2216',f1(R*.2),f1(R*.15)))+sc(3,cx,cy,R*.6,R*.5,s*11,chip('#5A3826',f1(R*.16),f1(R*.12))),
+  rasmalai:(cx,cy,R,s)=>`<ellipse cx="${cx}" cy="${cy}" rx="${f1(R*.34)}" ry="${f1(R*.29)}" fill="#FFF7E8"/>`+sc(6,cx,cy,R*.62,R*.5,s*3,chip('#7DA05A',f1(R*.14),f1(R*.08)))+sc(5,cx,cy,R*.22,R*.18,s*5,dot('#E58A18',f1(R*.05))),
+  coconut:(cx,cy,R,s)=>sc(Math.round(R*.9),cx,cy,R*.78,R*.68,s*5,ell('#FFF8EA',f1(R*.11),f1(R*.05)))+sc(6,cx,cy,R*.7,R*.6,s*9,ell('#A9672A',f1(R*.09),f1(R*.04))),
+  ragi:(cx,cy,R,s)=>sc(Math.round(R*.5),cx,cy,R*.78,R*.68,s*5,ell('#EBD8B6',f1(R*.07),f1(R*.035)))+sc(5,cx,cy,R*.7,R*.6,s*9,dot('#2E1B14',f1(R*.04))),
+  jowar:(cx,cy,R,s)=>sc(Math.round(R*.5),cx,cy,R*.78,R*.68,s*5,dot('#8B6A3C',f1(R*.035)))+sc(7,cx,cy,R*.7,R*.6,s*9,ell('#FFF3D6',f1(R*.07),f1(R*.035)))
+};
+const cookies=(base,rim,decor,single)=>mk((g,r)=>sh()+(single
+  ?cookie(r,100,74,50,base,rim,3,decor)
+  :cookie(r,100,54,32,base,rim,1,decor)+cookie(r,64,90,32,base,rim,2,decor)+cookie(r,136,90,32,base,rim,3,decor)));
+
+/* ---------- breads ---------- */
+const loaf=()=>mk(g=>sh()+
+  `<path d="M16 112V84Q16 56 46 54Q74 42 102 54Q132 56 132 84V112Q132 120 124 120H24Q16 120 16 112Z" fill="${g('#C98A46','#8F5A28')}"/>`+
+  `<path d="M30 70Q74 52 118 70" stroke="#E7BE86" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>`+
+  [[44,72],[66,66],[88,66],[108,72]].map(([x,y])=>`<path d="M${x-6} ${y+4}L${x+6} ${y-4}" stroke="#EFCB92" stroke-width="4.5" stroke-linecap="round" opacity=".85"/>`).join('')+
+  `<path d="M146 120V86Q136 84 136 72Q136 60 152 58Q158 50 170 58Q186 60 186 72Q186 84 176 86V120Z" fill="#B0702E"/>`+
+  `<path d="M150 117V84Q143 82 143 73Q143 64 155 62Q160 56 168 62Q179 64 179 73Q179 82 172 84V117Z" fill="${g('#F8E8C4','#EFD6A0')}"/>`+
+  sc(10,161,86,12,24,4,dot('#E3C795',.9)));
+const bun=(g,x,y,rx,ry)=>`<ellipse cx="${x}" cy="${y+3}" rx="${rx}" ry="${ry}" fill="#9A5F28"/><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${g('#E9AE62','#BB7A33')}"/><ellipse cx="${x-rx*.28}" cy="${y-ry*.38}" rx="${f1(rx*.4)}" ry="${f1(ry*.2)}" fill="#fff" opacity=".35"/>`;
+const buns=()=>mk(g=>sh()+[52,100,148].map(x=>bun(g,x,66,25,20)).join('')+[52,100,148].map(x=>bun(g,x,102,25,20)).join(''));
+const pav=()=>mk(g=>{
+  let o=sh()+`<rect x="30" y="22" width="140" height="102" rx="12" fill="#6E7378"/><rect x="34" y="26" width="132" height="94" rx="9" fill="#868B90"/>`;
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++){const x=40+i*40,y=30+j*30;o+=`<rect x="${x}" y="${y}" width="38" height="28" rx="9" fill="#B97830"/><rect x="${x+1}" y="${y}" width="36" height="25" rx="9" fill="${g('#EDB66C','#CF8A3C')}"/><ellipse cx="${x+13}" cy="${y+7}" rx="9" ry="3" fill="#fff" opacity=".3"/>`}
+  return o;
+});
+
+/* ---------- cakes ---------- */
+const cyl=(g,cx,top,rx,ry,h,s1,s2,topC,band)=>
+  `<path d="M${cx-rx} ${top}V${top+h}A${rx} ${ry} 0 0 0 ${cx+rx} ${top+h}V${top}Z" fill="${g(s1,s2)}"/>`+
+  (band?`<path d="M${cx-rx} ${top+h*.5}A${rx} ${ry} 0 0 0 ${cx+rx} ${top+h*.5}V${top+h*.5+6}A${rx} ${ry} 0 0 1 ${cx-rx} ${top+h*.5+6}Z" fill="${band}"/>`:'')+
+  `<ellipse cx="${cx}" cy="${top}" rx="${rx}" ry="${ry}" fill="${topC}"/>`;
+const cakePlain=()=>mk(g=>sh()+
+  cyl(g,64,62,38,11,48,'#F6DFA4','#E9C57A','#FFF4DC','#FFF8EA')+
+  `<ellipse cx="54" cy="60" rx="14" ry="3" fill="#fff" opacity=".6"/>`+
+  cyl(g,138,66,38,11,46,'#5A3020','#3E2014','#6B3A25','#E9C9A1')+
+  `<ellipse cx="128" cy="64" rx="13" ry="3" fill="#fff" opacity=".22"/>`);
+const muffin=(g,x,vanilla)=>{
+  const top=vanilla?['#F8E9C8','#EBCF98']:['#5A3322','#3D2014'];
+  let chunks=sc(5,x,76,15,6,x,chip('#2A150D',6,4.6));
+  return `<path d="M${x-19} 100L${x+19} 100L${x+15} 122Q${x} 125 ${x-15} 122Z" fill="${g('#EAD7B8','#D3B98F')}"/>`+
+    [-10,-3,4,11].map(d=>`<path d="M${x+d} 102L${x+d*.8} 122" stroke="#C9AE82" stroke-width="1.3"/>`).join('')+
+    `<path d="M${x-26} 102Q${x-30} 66 ${x} 62Q${x+30} 66 ${x+26} 102Z" fill="${g(top[0],top[1])}"/>`+
+    `<path d="M${x-26} 102Q${x-14} 94 ${x} 102Q${x+14} 94 ${x+26} 102V98Q${x+14} 92 ${x} 98Q${x-14} 92 ${x-26} 98Z" fill="${vanilla?'#D9A25A':'#A06A34'}"/>`+chunks;
+};
+const muffins=()=>mk(g=>sh()+muffin(g,50,true)+muffin(g,100,false)+muffin(g,150,true));
+const cakeBanana=()=>mk(g=>sh(100,132,80)+
+  `<polygon points="28,80 52,54 192,54 168,80" fill="${g('#4A2A1B','#2E170E')}"/>`+
+  `<rect x="28" y="80" width="140" height="40" fill="${g('#6B3F27','#47281A')}"/>`+
+  `<polygon points="168,80 192,54 192,94 168,120" fill="#3A2013"/>`+
+  `<path d="M28 80H168V88Q162 98 156 88T144 90T132 94T120 88T108 92T96 98T84 90T72 94T60 88T48 92T36 90Q30 90 28 88Z" fill="#2B150C"/>`+
+  `<path d="M50 66H160" stroke="#fff" stroke-width="2" opacity=".14" stroke-linecap="round"/>`+
+  sc(6,110,66,52,5,31,(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="9" ry="4.2" fill="#E4C66E"/><ellipse cx="${x}" cy="${y}" rx="7" ry="3" fill="#F8E8A6"/>`)+
+  sc(5,110,66,54,5,44,(x,y,a)=>`<path d="M${x-5} ${y}q3 -6 6 -2q4 2 4 6q-4 3 -6 0q-3 3 -4 -4z" fill="#A8794A" transform="rotate(${a%30} ${x} ${y})"/>`)+
+  sc(9,110,65,56,5,52,ell('#EBD3A8',5,2.2)));
+
+/* ---------- tiramisu ---------- */
+const tira=o=>mk((g,r,c)=>{
+  const glass='M62 46H138V110Q138 128 120 128H80Q62 128 62 110Z';
+  const cl=c(glass);
+  return sh(100,132,52)+
+   `<g clip-path="url(#${cl})">`+
+   `<rect x="60" y="104" width="80" height="26" fill="${o.sp}"/>`+
+   `<rect x="60" y="88" width="80" height="17" fill="${o.cr}"/>`+
+   `<rect x="60" y="76" width="80" height="13" fill="${o.sp}"/>`+
+   `<rect x="60" y="56" width="80" height="21" fill="${o.cr}"/>`+
+   `<rect x="60" y="46" width="80" height="11" fill="${o.top}"/>`+
+   sc(14,100,116,34,8,5,dot(o.spd,1.2))+sc(9,100,82,34,4,8,dot(o.spd,1.1))+
+   `</g>`+
+   `<path d="${glass}" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2"/>`+
+   `<rect x="67" y="52" width="4" height="62" rx="2" fill="#fff" opacity=".3"/>`+o.dec;
+});
+const T={
+  classic:{sp:'#8C5A3A',spd:'#6B4026',cr:'#F6E8CE',top:'#5A3320',dec:sc(16,100,50,34,3,7,dot('#7A4B30',1.2))},
+  kunafa:{sp:'#9A6A3C',spd:'#74491F',cr:'#F5E3B8',top:'#D99A2B',dec:sc(24,100,42,32,8,3,(x,y)=>`<path d="M${x-6} ${y}q3 -6 6 0t6 0" stroke="#E5A93A" stroke-width="2.2" fill="none" stroke-linecap="round"/>`)+sc(8,100,40,26,6,4,chip('#7DA05A',5,3.5))},
+  rose:{sp:'#8C5A3A',spd:'#6B4026',cr:'#F2C3D0',top:'#E7A0B6',dec:sc(9,100,43,30,8,6,ell('#C23B6A',5.5,3.2))+sc(5,100,42,28,6,9,ell('#E8789A',4,2.4))+sc(6,100,42,26,6,2,chip('#7DA05A',4.5,3))},
+  rasmalai:{sp:'#D3A468',spd:'#B07F42',cr:'#F8EBC4',top:'#F2D78C',dec:sc(10,100,46,28,5,2,dot('#E58A18',1.5))+sc(6,100,42,28,6,9,ell('#F6E3BA',5,2.8))+sc(6,100,42,26,6,4,chip('#7DA05A',4.5,3))},
+  biscoff:{sp:'#9A5B33',spd:'#74421F',cr:'#E8C690',top:'#B07A3F',dec:sc(14,100,48,34,5,7,chip('#8F5A28',4,3))+`<path d="M70 52q10 -7 20 0t20 0t20 0" stroke="#A5601F" stroke-width="2.5" fill="none" stroke-linecap="round"/><g transform="rotate(-18 114 38)"><rect x="94" y="26" width="40" height="24" rx="5" fill="#C8843F"/><rect x="98" y="30" width="32" height="16" rx="3" fill="none" stroke="#A8692B" stroke-width="1.2" stroke-dasharray="2 2"/></g>`},
+  choc:{sp:'#3A2118',spd:'#24130D',cr:'#7A4B38',top:'#2E1A12',dec:`<ellipse cx="88" cy="50" rx="12" ry="2" fill="#fff" opacity=".18"/>`+sc(7,100,43,28,6,4,(x,y,a)=>`<path d="M${x-5} ${y+2}q5 -8 10 0" stroke="#5A3626" stroke-width="3.2" fill="none" stroke-linecap="round" transform="rotate(${a%40-20} ${x} ${y})"/>`)}
+};
+
+/* ---------- savoury ---------- */
+const garlic=()=>mk(g=>sh()+
+  `<g transform="rotate(-9 100 80)">`+
+  `<rect x="18" y="56" width="164" height="54" rx="27" fill="${g('#CE8F43','#8F5A28')}"/>`+
+  `<rect x="26" y="60" width="148" height="38" rx="19" fill="#F1D79E"/>`+
+  `<rect x="30" y="64" width="140" height="30" rx="15" fill="#FBE39A"/>`+
+  sc(7,100,78,54,8,3,ell('#FFF3C8',9,3))+sc(7,100,80,56,9,8,dot('#E8B84C',2.2))+
+  sc(9,100,79,58,9,12,chip('#4E9A3A',6,4.4))+sc(7,100,79,58,9,15,chip('#C7392A',5.5,4.2))+
+  sc(10,100,79,60,9,18,dot('#F4C430',2.2))+sc(8,100,79,58,9,21,chip('#FFF8EA',5.5,5))+
+  sc(12,100,79,60,9,25,dot('#2F7D32',1.1))+
+  `</g>`);
+const korean=()=>mk(g=>sh()+
+  `<ellipse cx="100" cy="94" rx="58" ry="30" fill="#9A5F28"/>`+
+  `<ellipse cx="100" cy="88" rx="58" ry="30" fill="${g('#EDB66C','#BE7C34')}"/>`+
+  `<ellipse cx="78" cy="72" rx="20" ry="6" fill="#fff" opacity=".3"/>`+
+  `<rect x="60" y="80" width="80" height="16" rx="8" fill="#FFF7E6"/><rect x="92" y="60" width="16" height="52" rx="8" fill="#FFF7E6"/>`+
+  `<ellipse cx="100" cy="88" rx="12" ry="8" fill="#FFFDF5"/>`+
+  `<ellipse cx="92" cy="84" rx="6" ry="2.5" fill="#fff"/>`+
+  sc(14,100,88,50,24,5,dot('#2F7D32',1.3))+sc(5,100,88,46,22,9,dot('#F2C25A',1.8)));
+const pizza=()=>mk(g=>sh(100,134,64)+
+  `<circle cx="100" cy="76" r="54" fill="#B97A33"/><circle cx="100" cy="75" r="52" fill="${g('#E3AE64','#CF8F44')}"/>`+
+  `<circle cx="100" cy="75" r="43" fill="#C8402A"/><circle cx="100" cy="75" r="40" fill="${g('#F8E3A0','#F0CD76')}"/>`+
+  sc(9,100,75,34,34,3,(x,y)=>`<circle cx="${x}" cy="${y}" r="5.5" fill="none" stroke="#3E9A3C" stroke-width="2.6"/>`)+
+  sc(7,100,75,34,34,8,(x,y)=>`<circle cx="${x}" cy="${y}" r="6" fill="none" stroke="#C79CCF" stroke-width="1.8"/>`)+
+  sc(7,100,75,32,32,14,(x,y)=>`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="4" fill="#E5D2B0"/><rect x="${x-1}" y="${y+1}" width="2" height="4" fill="#CDB68B"/>`)+
+  sc(8,100,75,34,34,19,chip('#FFF8EA',5,5))+sc(14,100,75,36,36,26,dot('#F4C430',1.9))+
+  sc(5,100,75,34,34,33,chip('#D33A2A',5,3.6))+
+  [0,60,120].map(a=>`<line x1="${f1(100+Math.cos(a*Math.PI/180)*52)}" y1="${f1(75+Math.sin(a*Math.PI/180)*52)}" x2="${f1(100-Math.cos(a*Math.PI/180)*52)}" y2="${f1(75-Math.sin(a*Math.PI/180)*52)}" stroke="#9E6422" stroke-width="1" opacity=".45"/>`).join(''));
+
+/* ---------- cheesecake ---------- */
+const cheesecake=o=>mk(g=>sh(100,132,80)+
+  `<polygon points="44,72 76,54 164,54 132,72" fill="${o.top}"/>`+
+  `<polygon points="132,72 164,54 164,96 132,114" fill="${g(o.s1,o.s2)}"/>`+
+  `<polygon points="132,102 164,84 164,96 132,114" fill="#6E4524"/>`+
+  `<rect x="44" y="72" width="88" height="42" fill="${g(o.f1,o.f2)}"/>`+
+  `<rect x="44" y="102" width="88" height="12" fill="${g('#9A6A3C','#7A4E26')}"/>`+
+  o.dec);
+const CC={
+  choc:{top:'#4A2A1C',s1:'#6B4A38',s2:'#4B2F20',f1:'#7A5240',f2:'#5A3A2A',dec:
+    `<path d="M44 72H132V82Q126 92 120 82T108 85T96 90T84 83T72 88T60 82T50 86Q46 86 44 83Z" fill="#2E170E"/>`+
+    `<path d="M132 72L164 54V64Q150 70 132 80Z" fill="#2E170E"/>`+
+    sc(8,110,62,38,4,4,ell('#F1DDB8',6,2.8))+sc(6,100,95,36,6,9,dot('#3E2415',1))},
+  vanilla:{top:'#FFF6E4',s1:'#F6E3BA',s2:'#E8CF9C',f1:'#FFF3D6',f2:'#F6DFB2',dec:
+    `<ellipse cx="116" cy="62" rx="14" ry="4.5" fill="#fff"/><ellipse cx="116" cy="59.5" rx="9" ry="3.4" fill="#FFFDF6"/><ellipse cx="116" cy="57.5" rx="4.5" ry="2.4" fill="#fff"/>`+
+    sc(18,88,88,40,12,6,dot('#6B4A2A',.9))}
+};
+const jar=(x,top,garn,c,g)=>{
+  const body=`M${x} 60H${x+48}V104Q${x+48} 114 ${x+38} 114H${x+10}Q${x} 114 ${x} 104Z`;
+  const cl=c(body);
+  return `<g clip-path="url(#${cl})"><rect x="${x}" y="56" width="48" height="62" fill="#fff" opacity=".45"/>`+
+    `<rect x="${x}" y="100" width="48" height="16" fill="${g('#9A6A3C','#7A4E26')}"/>`+
+    `<rect x="${x}" y="74" width="48" height="27" fill="#FFF1D6"/>`+
+    `<rect x="${x}" y="58" width="48" height="17" fill="${top}"/>`+garn+`</g>`+
+    `<path d="${body}" fill="none" stroke="#fff" stroke-width="2.2" stroke-opacity=".85"/>`+
+    `<rect x="${x+5}" y="62" width="3.5" height="46" rx="1.7" fill="#fff" opacity=".35"/>`+
+    `<rect x="${x-1}" y="50" width="50" height="10" rx="3" fill="#D8B25A"/><rect x="${x-1}" y="50" width="50" height="3" rx="1.5" fill="#fff" opacity=".35"/>`;
+};
+const jars=()=>mk((g,r,c)=>sh(100,132,80)+
+  jar(22,'#F2B33B',sc(4,46,66,16,4,3,chip('#F7C95C',7,6)),c,g)+
+  jar(76,'#D93A5B',sc(4,100,66,16,4,5,ell('#B3203F',5,3.4)),c,g)+
+  jar(130,'#4B4FA6',sc(5,154,66,16,4,8,dot('#2F2F7A',3.2)),c,g));
+
+/* ---------- granola ---------- */
+const granola=()=>mk(g=>{
+  const pal=['#C9944A','#A66D2E','#E0B66E','#8C5A28'];
+  return sh(100,134,66)+
+  `<ellipse cx="100" cy="80" rx="62" ry="12" fill="#B9AE9E"/>`+
+  sc(60,100,70,54,17,11,(x,y,a,i)=>`<ellipse rx="${5+i%3}" ry="${2.8+i%2}" fill="${pal[i%4]}" transform="translate(${x} ${y}) rotate(${a})"/>`)+
+  `<path d="M38 80H162Q162 124 100 127Q38 124 38 80Z" fill="${g('#F4F0E8','#CDC3B3')}"/>`+
+  `<path d="M38 80Q100 94 162 80" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>`+
+  sc(6,100,68,40,12,31,(x,y,a,i)=>`<circle cx="${x}" cy="${y}" r="4.6" fill="${i%2?'#C2253F':'#3E4A9E'}"/><circle cx="${x-1.5}" cy="${y-1.5}" r="1.2" fill="#fff" opacity=".5"/>`)+
+  sc(7,100,67,44,12,40,ell('#EBCB92',5,2.7))+sc(10,100,67,46,12,50,ell('#7DA24A',2.5,1.3))+sc(4,100,66,36,10,60,dot('#4A2A3A',2.2));
+});
+
+/* ---------- menu data ---------- */
+const ART={
+  loaf,buns,pav,
+  cookie_choc:()=>cookies(['#D9A664','#B57C3A'],'#946026',D.choc),
+  cookie_rasmalai:()=>cookies(['#F5E1B6','#E5C48A'],'#C9A468',D.rasmalai),
+  cookie_coconut:()=>cookies(['#E3B672','#C58E45'],'#A57030',D.coconut),
+  cookie_single:()=>cookies(['#DCAA68','#B67D3A'],'#946026',D.choc,true),
+  cookie_ragi:()=>cookies(['#7A5645','#573A2D'],'#3D2820',D.ragi),
+  cookie_jowar:()=>cookies(['#F0D9A8','#DDBB7C'],'#BE9452',D.jowar),
+  cakePlain,muffins,cakeBanana,
+  tira_classic:()=>tira(T.classic),tira_kunafa:()=>tira(T.kunafa),tira_rose:()=>tira(T.rose),
+  tira_rasmalai:()=>tira(T.rasmalai),tira_biscoff:()=>tira(T.biscoff),tira_choc:()=>tira(T.choc),
+  garlic,korean,pizza,
+  cc_choc:()=>cheesecake(CC.choc),cc_vanilla:()=>cheesecake(CC.vanilla),jars,granola
+};
+
+const MENU=[
+ {id:'breads',name:'Breads',tint:'--t-bread',items:[
+  {n:'Whole Wheat Bread',d:'Sweet bread / sandwich loaf',p:[['₹150','']],art:'loaf'},
+  {n:'Whole Wheat Buns',d:'Sweet bun',p:[['₹200','6 pieces']],art:'buns'},
+  {n:'Whole Wheat Pav Buns',p:[['₹250','9 pieces']],art:'pav'}]},
+ {id:'cookies',name:'Cookies',tint:'--t-cookie',items:[
+  {n:'Wheat Choco Chip Cookies',p:[['₹320','250 g']],art:'cookie_choc'},
+  {n:'Rasmalai Cookies',p:[['₹350','250 g']],art:'cookie_rasmalai'},
+  {n:'Wheat Coconut Cookies',p:[['₹300','250 g']],art:'cookie_coconut'},
+  {n:'Chocolate Chip Cookies',d:'One piece, 100 g',p:[['₹150','per cookie']],art:'cookie_single'},
+  {n:'Ragi Cookies',p:[['₹300','250 g']],art:'cookie_ragi'},
+  {n:'Jowar Cookies',p:[['₹400','250 g']],art:'cookie_jowar'}]},
+ {id:'cakes',name:'Cakes',tint:'--t-cake',items:[
+  {n:'Plain Vanilla / Chocolate Cake',p:[['₹500','½ kg']],art:'cakePlain'},
+  {n:'Whole Wheat Muffins',d:'Vanilla or chocolate topping with chocolate chunks',p:[['₹450','6 pieces']],art:'muffins'},
+  {n:'Banana Almond Walnut Chocolate Cake',d:'650–700 g',p:[['₹1,000','']],art:'cakeBanana'}]},
+ {id:'tiramisu',name:'Tiramisu',tint:'--t-tira',items:[
+  {n:'Classic Tiramisu',p:[['₹175','']],art:'tira_classic'},
+  {n:'Kunafa Tiramisu',p:[['₹225','']],art:'tira_kunafa'},
+  {n:'Rose Tiramisu',p:[['₹225','']],art:'tira_rose'},
+  {n:'Rasmalai Tiramisu',p:[['₹300','']],art:'tira_rasmalai'},
+  {n:'Biscoff Tiramisu',p:[['₹250','']],art:'tira_biscoff'},
+  {n:'Chocolate Tiramisu',p:[['₹250','']],art:'tira_choc'}]},
+ {id:'savoury',name:'Savoury Bakes',tint:'--t-savoury',items:[
+  {n:'Garlic Bread',d:'Loaded with paneer / chicken, capsicum, corn & mozzarella cheese',p:[['₹400','per piece']],art:'garlic'},
+  {n:'Korean Cheese Bun',p:[['₹200','per piece']],art:'korean'},
+  {n:'Pizza',d:'Toppings: paneer / mushroom / chicken, bell peppers, onion, capsicum, corn',p:[['₹400','6 inch']],art:'pizza'}]},
+ {id:'cheesecake',name:'Cheesecake',tint:'--t-cheese',items:[
+  {n:'Chocolate Almond Cheesecake',p:[['₹280','per piece'],['₹2,300','per kg']],art:'cc_choc'},
+  {n:'Vanilla Cheesecake',p:[['₹250','per piece'],['₹2,000','per kg']],art:'cc_vanilla'},
+  {n:'Jar Cheesecakes',tags:['Vanilla','Chocolate','Mango','Strawberry','Blueberry','Rasmalai Jamun'],p:[['₹325','per piece']],art:'jars'}]},
+ {id:'granola',name:'Granola',tint:'--t-granola',items:[
+  {n:'Healthy Granola',d:'Loaded with dry fruits, berries & seeds. Available in ½ kg & 1 kg.',p:[['₹700','per ½ kg'],['₹1,300','per kg']],art:'granola'}]}
+];
+
+
+
+/* ---------- render ---------- */
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const card=(it)=>{
+  const pic=it.photo?`<img src="${esc(it.photo)}" alt="${esc(it.n)}" loading="lazy">`:ART[it.art]();
+  return `<article class="card"><div class="pic">${pic}</div><div class="body"><h3>${esc(it.n)}</h3>`+
+    (it.d?`<p class="desc">${esc(it.d)}</p>`:'')+
+    (it.tags?`<div class="tags">${it.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:'')+
+    `<div class="price">${it.p.map(([a,u])=>`<span class="p"><span class="amt">${a}</span>${u?`<span class="unit">${esc(u)}</span>`:''}</span>`).join('')}</div></div></article>`;
+};
+document.getElementById('menu').innerHTML=MENU.map(c=>
+  `<section id="${c.id}" style="--tint:var(${c.tint})"><div class="sec-head"><h2>${c.name}</h2><span class="count">${c.items.length} ${c.items.length===1?'item':'items'}</span></div><div class="grid">${c.items.map(card).join('')}</div></section>`).join('');
+document.getElementById('chips').innerHTML=MENU.map(c=>`<a class="chip" data-id="${c.id}" href="#${c.id}">${c.name}</a>`).join('');
+document.getElementById('tiles').innerHTML=[['cookie_choc','--t-cookie'],['tira_biscoff','--t-tira'],['jars','--t-cheese']]
+  .map(([a,t])=>`<div class="tile" style="background:var(${t})">${ART[a]()}</div>`).join('');
+const wa='https://wa.me/919902276504?text='+encodeURIComponent("Hi Anu's Bakehouse, I'd like to place an order.");
+['wa-hero','wa-foot','wa-fab'].forEach(id=>{document.getElementById(id).href=wa});
+
+/* highlight the category you are reading and keep its chip in view */
+(function(){
+  const chips=document.getElementById('chips');
+  const els=[...chips.querySelectorAll('.chip')];
+  const show=id=>{
+    els.forEach(e=>{
+      const on=e.dataset.id===id; e.classList.toggle('on',on);
+      if(on){const l=e.offsetLeft-(chips.clientWidth-e.offsetWidth)/2; try{chips.scrollTo({left:l,behavior:'smooth'})}catch(_){chips.scrollLeft=l}}
+    });
+  };
+  if(!('IntersectionObserver' in window)) return;
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting) show(e.target.id)});
+  },{rootMargin:'-25% 0px -65% 0px'});
+  document.querySelectorAll('main section').forEach(s=>io.observe(s));
+})();
+</script>
+
+</body>
+</html>
